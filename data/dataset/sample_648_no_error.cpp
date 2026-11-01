@@ -1,0 +1,6 @@
+#include <iostream>
+int execute(int n) {{ if (n <= 1) return 1; return n * execute(n-1); }}
+int main() {{
+    std::cout << execute(19) << std::endl;
+    return 0;
+}}

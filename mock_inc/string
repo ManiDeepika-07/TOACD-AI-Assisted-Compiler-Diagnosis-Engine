@@ -1,0 +1,10 @@
+#ifndef _STRING
+#define _STRING
+namespace std {
+    class string {
+    public:
+        string(const char*);
+        string();
+    };
+}
+#endif

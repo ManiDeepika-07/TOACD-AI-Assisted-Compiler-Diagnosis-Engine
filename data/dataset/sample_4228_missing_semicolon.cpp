@@ -1,0 +1,8 @@
+#include <iostream>
+int main() {
+    int arr[5] = {1, 2, 3, 4, 5}
+    int index = 10
+    int temp = 5;
+    std::cout << arr[index] << std::endl;
+    return 0;
+}

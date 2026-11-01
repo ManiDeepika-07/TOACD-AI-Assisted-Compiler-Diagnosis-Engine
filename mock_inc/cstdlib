@@ -1,0 +1,8 @@
+#ifndef _CSTDLIB_H
+#define _CSTDLIB_H
+typedef unsigned long size_t;
+void* malloc(size_t size);
+void free(void* ptr);
+int system(const char* command);
+void exit(int status);
+#endif

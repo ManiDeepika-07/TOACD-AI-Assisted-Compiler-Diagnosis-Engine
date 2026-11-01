@@ -1,0 +1,18 @@
+#ifndef _IOSTREAM_H
+#define _IOSTREAM_H
+namespace std {
+    class ostream {
+    public:
+        ostream& operator<<(const char*);
+        ostream& operator<<(int);
+        ostream& operator<<(double);
+        ostream& operator<<(unsigned int);
+        ostream& operator<<(bool);
+        ostream& operator<<(float);
+        ostream& operator<<(long);
+    };
+    extern ostream cout;
+    extern ostream cerr;
+    extern const char* endl;
+}
+#endif
