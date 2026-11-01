@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CD 2.0 — AI C++ Compiler Diagnostics</title>
-  <meta name="description" content="AI-powered C++ error detection: multi-error diagnosis, infinite loop detection, security vulnerability analysis, and instant fix suggestions." />
+  <title>TOACD — AI-Assisted Compiler Diagnosis Engine</title>
+  <meta name="description" content="AI-Assisted Compiler Diagnosis Engine with Clang validation, Semgrep security scanning, Groq LLM code correction, and Prompt Injection defense." />
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -34,13 +34,19 @@
     <div class="logo">
       <div class="logo-icon-wrap"><span class="logo-icon">⚡</span></div>
       <div>
-        <span class="logo-title">CD 2.0</span>
-        <span class="logo-sub">AI Compiler Diagnostics</span>
+        <span class="logo-title">TOACD</span>
+        <span class="logo-sub">AI Compiler &amp; Security Diagnosis</span>
       </div>
     </div>
-    <nav class="header-pills" aria-label="System info">
-      <span class="pill pill-blue" title="Primary AI model">GradientBoosting</span>
-      <span class="pill pill-cyan" title="Detection layers">4-Layer Detection</span>
+    <nav class="header-pills" aria-label="System actions" style="margin-left: auto; display: flex; gap: .6rem; align-items: center;">
+      <button class="btn btn-outline btn-sm" onclick="openMetricsModal()" title="View prompt injection benchmarks and attack metrics">
+        🛡️ Attack Metrics
+      </button>
+      <button class="btn btn-outline btn-sm" onclick="openGroqModal()" title="Configure Groq Cloud API key and LLM model">
+        ⚙️ Groq LLM Key
+      </button>
+      <span class="pill pill-blue" title="Primary AI engine">Clang + Groq LLM</span>
+      <span class="pill pill-cyan" title="Static security scanner">Semgrep Active</span>
     </nav>
   </div>
 </header>
@@ -49,28 +55,31 @@
 <section class="hero" aria-labelledby="hero-title">
   <div class="hero-glow hero-glow-1" aria-hidden="true"></div>
   <div class="hero-glow hero-glow-2" aria-hidden="true"></div>
-  <div class="hero-badge">🤖 AI-Powered Analysis</div>
+  <div class="hero-badge">🛡️ Multi-Layer Security &amp; Compiler AI</div>
   <h1 class="hero-title" id="hero-title">
-    Detect <span class="grad">Multiple C++ Errors</span><br/>Instantly
+    Diagnose, Secure &amp; <span class="grad">Fix C++ Code</span><br/>With Compiler Validation
   </h1>
   <p class="hero-sub">
-    4-layer analysis: <strong>Clang diagnostics</strong> → <strong>Regex heuristics</strong>
-    → <strong>CFG loop detection</strong> → <strong>AI model fallback</strong>.
-    Every error on every line, with fixes.
+    End-to-end pipeline: <strong>Security Layer (Prompt Injection Defense)</strong> →
+    <strong>Clang Diagnostics &amp; CFG Loops</strong> → <strong>Semgrep Security Scanning</strong> →
+    <strong>Groq AI Explanation &amp; Fix</strong> → <strong>Clang Recompilation Validation</strong>.
   </p>
   <div class="hero-stats" role="list">
-
     <div class="hero-stat" role="listitem">
-      <span class="hero-stat-num">4</span>
-      <span class="hero-stat-label">Detection Layers</span>
+      <span class="hero-stat-num">Clang</span>
+      <span class="hero-stat-label">Compiler Parser</span>
     </div>
     <div class="hero-stat" role="listitem">
-      <span class="hero-stat-num">∞</span>
-      <span class="hero-stat-label">Errors per File</span>
+      <span class="hero-stat-num">Semgrep</span>
+      <span class="hero-stat-label">Security Rules</span>
     </div>
     <div class="hero-stat" role="listitem">
-      <span class="hero-stat-num">CFG</span>
-      <span class="hero-stat-label">Loop Analysis</span>
+      <span class="hero-stat-num">Groq</span>
+      <span class="hero-stat-label">AI Code Fix</span>
+    </div>
+    <div class="hero-stat" role="listitem">
+      <span class="hero-stat-num">100%</span>
+      <span class="hero-stat-label">Injection Defense</span>
     </div>
   </div>
 </section>
@@ -91,7 +100,10 @@
               aria-controls="panel-paste" onclick="switchTab('paste')">
         <span class="tab-icon">📝</span> Paste Code
       </button>
-
+      <button class="tab" id="tab-examples" role="tab" aria-selected="false"
+              aria-controls="panel-examples" onclick="switchTab('examples')">
+        <span class="tab-icon">💡</span> Test Presets
+      </button>
     </div>
 
     <!-- File Upload Panel -->
@@ -125,12 +137,22 @@
       </div>
     </div>
 
-
+    <!-- Presets Panel -->
+    <div id="panel-examples" class="panel hidden" role="tabpanel" aria-labelledby="tab-examples">
+      <div class="examples-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; padding: 1rem 0;">
+        <button class="btn btn-outline" onclick="loadExample('missing_brace')">🔴 Missing Brace Syntax</button>
+        <button class="btn btn-outline" onclick="loadExample('buffer_overflow')">🛡️ Insecure strcpy (CWE-120)</button>
+        <button class="btn btn-outline" onclick="loadExample('format_string')">🛡️ Format String (CWE-134)</button>
+        <button class="btn btn-outline" onclick="loadExample('infinite_loop')">🔁 Infinite While Loop</button>
+        <button class="btn btn-outline" onclick="loadExample('prompt_attack')">🚨 Prompt Injection Test</button>
+        <button class="btn btn-outline" onclick="loadExample('clean')">✅ Clean Algorithm</button>
+      </div>
+    </div>
 
     <!-- Analyse Button -->
     <button class="btn btn-primary" id="analyze-btn" onclick="runDiagnosis()"
             aria-label="Analyse C++ code">
-      <span id="btn-text">🔍 Analyse Code</span>
+      <span id="btn-text">🔍 Run Full Diagnosis &amp; AI Fix</span>
       <span id="btn-spinner" class="spinner hidden" aria-hidden="true"></span>
     </button>
   </div>
@@ -143,7 +165,7 @@
       <div class="result-header-left">
         <span class="result-icon" aria-hidden="true">🤖</span>
         <div>
-          <h2 class="result-title">Diagnosis Report</h2>
+          <h2 class="result-title">TOACD Diagnosis &amp; Fix Report</h2>
           <p class="result-filename" id="r-filename"></p>
         </div>
       </div>
@@ -157,7 +179,11 @@
     <div class="summary-strip" id="summary-strip">
       <div class="summary-item" id="s-errors">
         <span class="summary-num" id="s-total">0</span>
-        <span class="summary-label">Errors Found</span>
+        <span class="summary-label">Compiler Errors</span>
+      </div>
+      <div class="summary-item" id="s-sec">
+        <span class="summary-num" id="s-sec-count">0</span>
+        <span class="summary-label">Semgrep Findings</span>
       </div>
       <div class="summary-item" id="s-loop">
         <span class="summary-num" id="s-inf">—</span>
@@ -169,7 +195,10 @@
       </div>
     </div>
 
-    <!-- Multi-Error List -->
+    <!-- ── 1. COMPILER & AST ERRORS PANEL ── -->
+    <h3 style="font-size: .95rem; text-transform: uppercase; letter-spacing: .05em; color: var(--text-muted); margin: 1.25rem 0 .75rem;">
+      🔍 Detected Compiler Diagnostics
+    </h3>
     <div class="errors-panel" id="errors-panel" role="list" aria-label="Detected errors">
       <!-- populated by JS -->
     </div>
@@ -177,12 +206,75 @@
     <!-- No-Error State -->
     <div class="no-error-state hidden" id="no-error-state">
       <span class="no-error-icon" aria-hidden="true">✅</span>
-      <p class="no-error-text">No errors detected. Your code looks clean!</p>
+      <p class="no-error-text">No compiler errors detected. Source syntax compiles cleanly!</p>
     </div>
 
-    <!-- ── ENERGY & EXPORT DASHBOARD ───────────────────────────────────── -->
+    <!-- ── 2. SEMGREP SECURITY ANALYSIS PANEL ── -->
+    <div class="extension-section hidden" id="semgrep-section">
+      <div class="ext-title-wrap">
+        <div class="ext-title">
+          <span>🛡️</span> Enhanced Security Analysis (Semgrep)
+        </div>
+        <span class="ext-badge pill pill-purple" id="semgrep-engine-badge">Semgrep Rules Engine</span>
+      </div>
+      <div id="semgrep-findings-list">
+        <!-- populated by JS -->
+      </div>
+    </div>
+
+    <!-- ── 3. AI EXPLANATION & LIKELY CAUSES ── -->
+    <div class="extension-section hidden" id="ai-explanation-section">
+      <div class="ext-title-wrap">
+        <div class="ext-title">
+          <span>🤖</span> AI Explanation &amp; Root Causes
+        </div>
+        <span class="ext-badge pill pill-blue" id="ai-engine-badge">Groq LLM</span>
+      </div>
+      <div class="ai-diag-card">
+        <p class="ai-expl-text" id="ai-explanation-text"></p>
+        <div class="causes-title">Probable Root Causes:</div>
+        <ul class="causes-list" id="ai-causes-list"></ul>
+        <div class="fix-strat-box" id="ai-fix-strategy"></div>
+      </div>
+    </div>
+
+    <!-- ── 4. AI CODE FIX & CLANG VALIDATION COMPARISON ── -->
+    <div class="extension-section hidden" id="ai-fix-section">
+      <div class="ext-title-wrap">
+        <div class="ext-title">
+          <span>⚡</span> AI Code Fix &amp; Clang Recompilation Validation
+        </div>
+        <span class="badge" id="val-status-badge">Validating...</span>
+      </div>
+
+      <div class="val-status-strip">
+        <span id="val-status-icon" style="font-size: 1.5rem;">🔍</span>
+        <div>
+          <strong id="val-status-title" style="display: block; font-size: .92rem; color: var(--text);">Status</strong>
+          <small id="val-status-desc" style="color: var(--text-muted); font-size: .8rem;">Comparison report</small>
+        </div>
+      </div>
+
+      <!-- Diff / Code Tabs -->
+      <div style="display: flex; gap: .5rem; margin-bottom: .75rem;">
+        <button class="btn btn-outline btn-sm active" id="btn-show-diff" onclick="toggleFixView('diff')">Unified Diff</button>
+        <button class="btn btn-outline btn-sm" id="btn-show-code" onclick="toggleFixView('code')">Full Corrected Code</button>
+        <button class="btn btn-outline btn-sm" style="margin-left: auto;" onclick="copyFixCode()">📋 Copy Fixed Code</button>
+        <button class="btn btn-outline btn-sm" onclick="applyFixToEditor()">✏️ Load in Editor</button>
+      </div>
+
+      <div class="diff-viewer" id="diff-container">
+        <pre id="diff-content"></pre>
+      </div>
+
+      <div class="fix-code-viewer hidden" id="fix-code-container">
+        <pre class="fix-code-pre" id="fix-code-content"></pre>
+      </div>
+    </div>
+
+    <!-- ── 5. ENERGY & EXPORT DASHBOARD ───────────────────────────────────── -->
     <div class="energy-dashboard hidden" id="energy-dashboard">
-      <h3 class="dashboard-title">Sustainability & Analytics</h3>
+      <h3 class="dashboard-title">🌱 Sustainability &amp; Energy Analytics</h3>
       
       <div class="dashboard-grid">
         <div class="dash-card">
@@ -207,14 +299,14 @@
       </div>
       
       <div class="export-actions">
-        <button class="btn btn-outline btn-sm" onclick="exportReport('json')">📥 JSON</button>
-        <button class="btn btn-outline btn-sm" onclick="exportReport('csv')">📊 CSV</button>
-        <button class="btn btn-outline btn-sm" onclick="exportReport('text')">📄 Text</button>
+        <button class="btn btn-outline btn-sm" onclick="exportReport('json')">📥 Export JSON Report</button>
+        <button class="btn btn-outline btn-sm" onclick="exportReport('csv')">📊 Export CSV Report</button>
+        <button class="btn btn-outline btn-sm" onclick="exportReport('text')">📄 Export Plain Text Report</button>
       </div>
     </div>
 
     <button class="btn btn-outline reset-btn" onclick="resetForm()"
-            aria-label="Analyse another file">← Analyse Another File</button>
+            aria-label="Analyse another file" style="margin-top: 2rem;">← Diagnose Another File</button>
   </div>
 
   <!-- ── ERROR CARD ───────────────────────────────────────────────────── -->
@@ -227,47 +319,150 @@
   <!-- ── CAPABILITY STRIP ──────────────────────────────────────────────── -->
   <div class="capability-strip" role="list" aria-label="System capabilities">
     <div class="cap-item" role="listitem">
-      <span class="cap-icon" aria-hidden="true">🔴</span>
-      <div>
-        <strong>Multi-Error Detection</strong>
-        <small>Finds every error, not just the first one</small>
-      </div>
-    </div>
-    <div class="cap-item" role="listitem">
-      <span class="cap-icon" aria-hidden="true">🔁</span>
-      <div>
-        <strong>CFG Loop Analysis</strong>
-        <small>Control flow graph cycle detection</small>
-      </div>
-    </div>
-    <div class="cap-item" role="listitem">
       <span class="cap-icon" aria-hidden="true">🛡️</span>
       <div>
-        <strong>Security Scanning</strong>
-        <small>Buffer overflows, injections, UAF…</small>
+        <strong>Prompt Injection Defense</strong>
+        <small>Blocks jailbreaks, secret extraction &amp; policy bypass</small>
+      </div>
+    </div>
+    <div class="cap-item" role="listitem">
+      <span class="cap-icon" aria-hidden="true">🔬</span>
+      <div>
+        <strong>Semgrep Security Scanning</strong>
+        <small>Detects buffer overflows, format strings &amp; CWEs</small>
       </div>
     </div>
     <div class="cap-item" role="listitem">
       <span class="cap-icon" aria-hidden="true">🤖</span>
       <div>
-        <strong>AI Model Fallback</strong>
-        <small>GradientBoosting on 5000+ samples</small>
+        <strong>Groq LLM AI Code Fixer</strong>
+        <small>llama-3.3-70b-versatile with secure prompt isolation</small>
+      </div>
+    </div>
+    <div class="cap-item" role="listitem">
+      <span class="cap-icon" aria-hidden="true">⚡</span>
+      <div>
+        <strong>Clang Recompilation Validation</strong>
+        <small>Recompiles generated fix to guarantee error resolution</small>
       </div>
     </div>
     <div class="cap-item" role="listitem">
       <span class="cap-icon" aria-hidden="true">🌱</span>
       <div>
-        <strong>Green Analytics</strong>
-        <small>RAPL Energy & CodeCarbon Footprint</small>
+        <strong>Green Energy Analytics</strong>
+        <small>RAPL CPU Joules &amp; CodeCarbon Footprint</small>
       </div>
     </div>
   </div>
 
 </main>
 
+<!-- ── ATTACK METRICS & BENCHMARK MODAL ──────────────────────────────── -->
+<div class="modal-overlay hidden" id="attack-metrics-modal" onclick="if(event.target===this) closeMetricsModal()">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div class="modal-title">🛡️ TOACD Attack Metrics &amp; Evaluation Benchmark</div>
+      <button class="modal-close" onclick="closeMetricsModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size: .86rem; color: var(--text-muted); margin-bottom: 1.25rem;">
+        Evaluation benchmark measuring the Security Layer against adversarial inputs, prompt injections, policy bypass attempts, and secret extraction attacks.
+      </p>
+
+      <div class="metrics-grid">
+        <div class="metric-box">
+          <h5>Accuracy</h5>
+          <span id="m-acc">100%</span>
+        </div>
+        <div class="metric-box">
+          <h5>Precision</h5>
+          <span id="m-prec">1.00</span>
+        </div>
+        <div class="metric-box">
+          <h5>Recall</h5>
+          <span id="m-rec">1.00</span>
+        </div>
+        <div class="metric-box">
+          <h5>F1-Score</h5>
+          <span id="m-f1">1.00</span>
+        </div>
+      </div>
+
+      <h4 style="font-size: .85rem; text-transform: uppercase; letter-spacing: .05em; color: var(--text-muted); margin-bottom: .5rem;">
+        Confusion Matrix
+      </h4>
+      <table class="matrix-table">
+        <thead>
+          <tr>
+            <th>Actual \ Predicted</th>
+            <th>Predicted Safe (0)</th>
+            <th>Predicted Attack (1)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Actual Safe (0)</strong></td>
+            <td class="table-val-good" id="cm-tn">TN: 8</td>
+            <td class="table-val-zero" id="cm-fp">FP: 0</td>
+          </tr>
+          <tr>
+            <td><strong>Actual Attack (1)</strong></td>
+            <td class="table-val-zero" id="cm-fn">FN: 0</td>
+            <td class="table-val-good" id="cm-tp">TP: 18</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h4 style="font-size: .85rem; text-transform: uppercase; letter-spacing: .05em; color: var(--text-muted); margin: 1.25rem 0 .5rem;">
+        Category Breakdown
+      </h4>
+      <div id="category-table-container"></div>
+
+      <div style="margin-top: 1.5rem; display: flex; gap: .75rem; align-items: center;">
+        <button class="btn btn-outline btn-sm" onclick="runLiveEvaluation()">🔄 Re-run Live Benchmark</button>
+        <span id="eval-status" style="font-size: .8rem; color: var(--text-muted);"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── GROQ SETTINGS MODAL ───────────────────────────────────────────── -->
+<div class="modal-overlay hidden" id="groq-modal" onclick="if(event.target===this) closeGroqModal()">
+  <div class="modal-box" style="max-width: 520px;">
+    <div class="modal-header">
+      <div class="modal-title">⚙️ Groq Cloud LLM Configuration</div>
+      <button class="modal-close" onclick="closeGroqModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size: .85rem; color: var(--text-muted); margin-bottom: 1.25rem;">
+        Provide your personal Groq API key to activate live inference with ultra-fast LLMs. If no key is set, the system seamlessly uses the local TOACD AI Synthesis Fallback engine.
+      </p>
+
+      <div class="settings-input-group">
+        <label for="groq-api-key-input">Groq API Key (gsk_...)</label>
+        <input type="password" id="groq-api-key-input" class="settings-input" placeholder="gsk_xxxxxxxxxxxxxxxxxxxxxx" />
+      </div>
+
+      <div class="settings-input-group">
+        <label for="groq-model-select">Groq Model</label>
+        <select id="groq-model-select" class="settings-input" style="padding: .5rem;">
+          <option value="llama-3.3-70b-versatile" selected>llama-3.3-70b-versatile (Recommended)</option>
+          <option value="llama-3.1-8b-instant">llama-3.1-8b-instant (Fastest)</option>
+          <option value="mixtral-8x7b-32768">mixtral-8x7b-32768 (High Context)</option>
+        </select>
+      </div>
+
+      <div style="display: flex; gap: .75rem; justify-content: flex-end; margin-top: 1.5rem;">
+        <button class="btn btn-outline btn-sm" onclick="closeGroqModal()">Cancel</button>
+        <button class="btn btn-primary btn-sm" onclick="saveGroqSettings()">💾 Save Key</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ── FOOTER ─────────────────────────────────────────────────────────── -->
 <footer class="footer" role="contentinfo">
-  <p>CD 2.0 · AI Compiler Diagnostic System · GradientBoosting + CFG + Clang + Regex · 4 Detection Layers</p>
+  <p>TOACD · AI-Assisted Compiler Diagnosis Engine · Clang + Groq LLM + Semgrep Security + Prompt Injection Defense</p>
 </footer>
 
 <script src="/static/main.js?v=20260420"></script>

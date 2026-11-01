@@ -8,6 +8,27 @@ import re
 import os
 
 
+import shutil
+
+def get_clang_executable() -> str:
+    """Find clang binary on PATH or standard install locations."""
+    p = shutil.which("clang")
+    if p:
+        return p
+    candidates = [
+        r"C:\Program Files\LLVM\bin\clang.exe",
+        r"C:\Program Files (x86)\LLVM\bin\clang.exe",
+        os.path.expandvars(r"%LOCALAPPDATA%\Programs\LLVM\bin\clang.exe"),
+        "/usr/bin/clang",
+        "/usr/local/bin/clang",
+        "/opt/homebrew/bin/clang"
+    ]
+    for c in candidates:
+        if os.path.exists(c):
+            return c
+    return "clang"
+
+
 # ──────────────────────────────────────────────────────────────────────────────
 #  Clang invocation
 # ──────────────────────────────────────────────────────────────────────────────
@@ -21,17 +42,18 @@ def run_clang(file_path: str):
     # mock_inc lives one level up (in scripts/)
     mock_inc = os.path.join(script_dir, "..", "mock_inc")
     mock_inc = os.path.normpath(mock_inc)
+    clang_bin = get_clang_executable()
 
     try:
         # Phase 1: AST dump
         ast_result = subprocess.run(
-            ["clang", "-Xclang", "-ast-dump", "-fsyntax-only",
+            [clang_bin, "-Xclang", "-ast-dump", "-fsyntax-only",
              "-Wall", "-Wextra", "-I", mock_inc, file_path],
             capture_output=True, text=True, check=False, timeout=30
         )
         # Phase 2: plain diagnostics (separate run for cleaner stderr)
         diag_result = subprocess.run(
-            ["clang", "-fsyntax-only", "-Wall", "-Wextra",
+            [clang_bin, "-fsyntax-only", "-Wall", "-Wextra",
              "-I", mock_inc, file_path],
             capture_output=True, text=True, check=False, timeout=30
         )

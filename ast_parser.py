@@ -4,15 +4,36 @@ import re
 import os
 
 
+import shutil
+
+def get_clang_executable() -> str:
+    p = shutil.which("clang")
+    if p:
+        return p
+    candidates = [
+        r"C:\Program Files\LLVM\bin\clang.exe",
+        r"C:\Program Files (x86)\LLVM\bin\clang.exe",
+        os.path.expandvars(r"%LOCALAPPDATA%\Programs\LLVM\bin\clang.exe"),
+        "/usr/bin/clang",
+        "/usr/local/bin/clang",
+        "/opt/homebrew/bin/clang"
+    ]
+    for c in candidates:
+        if os.path.exists(c):
+            return c
+    return "clang"
+
+
 def get_ast_dump(file_path):
     """Runs clang -Xclang -ast-dump -fsyntax-only and returns stdout, stderr."""
     try:
         # Resolve mock_inc relative to this script directory
         script_dir = os.path.dirname(os.path.abspath(__file__))
         mock_inc = os.path.join(script_dir, "mock_inc")
+        clang_bin = get_clang_executable()
         
         result = subprocess.run(
-            ["clang", "-Xclang", "-ast-dump", "-fsyntax-only", "-Wall", "-Wextra", "-I", mock_inc, file_path],
+            [clang_bin, "-Xclang", "-ast-dump", "-fsyntax-only", "-Wall", "-Wextra", "-I", mock_inc, file_path],
             capture_output=True,
             text=True,
             check=False

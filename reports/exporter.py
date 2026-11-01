@@ -78,6 +78,51 @@ def to_text(result: dict) -> str:
         lines.append("")
         lines.append("  ✅  No errors detected. Code looks clean!")
 
+    # ── Semgrep Security Findings ─────────────────────────────────────────────
+    semgrep = result.get("semgrep_scan", {})
+    if semgrep and semgrep.get("findings"):
+        lines.append("")
+        lines.append(f"SEMGREP SECURITY ANALYSIS  ({semgrep.get('total_findings', 0)} finding(s))")
+        lines.append("-" * 40)
+        lines.append(f"  Scanner Engine : {semgrep.get('engine', 'Semgrep')}")
+        for i, f in enumerate(semgrep["findings"], 1):
+            lines.append(f"\n  [SEC-{i}] Line {f.get('line','?')} — {f.get('rule_id','?')}")
+            lines.append(f"         Severity : {f.get('severity','?')} | {f.get('cwe','')} | {f.get('owasp','')}")
+            lines.append(f"         Finding  : {f.get('message','')}")
+            if f.get('code_snippet'):
+                lines.append(f"         Code     : {f.get('code_snippet')}")
+            lines.append(f"         Remedy   : {f.get('recommendation','')}")
+
+    # ── AI Explanation & Fix ──────────────────────────────────────────────────
+    ai_diag = result.get("ai_diagnosis", {})
+    if ai_diag and ai_diag.get("explanation"):
+        lines.append("")
+        lines.append("AI EXPLANATION & CORRECTION (Groq / Secure LLM)")
+        lines.append("-" * 40)
+        lines.append(f"  Engine          : {ai_diag.get('engine', 'AI Engine')}")
+        lines.append(f"  Explanation     : {ai_diag.get('explanation')}")
+        if ai_diag.get("likely_causes"):
+            lines.append("  Likely Causes   :")
+            for cause in ai_diag["likely_causes"]:
+                lines.append(f"    • {cause}")
+        if ai_diag.get("fix_explanation"):
+            lines.append(f"  Fix Strategy    : {ai_diag.get('fix_explanation')}")
+
+    # ── AI Fix Validation ────────────────────────────────────────────────────
+    ai_val = result.get("ai_validation", {})
+    if ai_val:
+        lines.append("")
+        lines.append("AI FIX VALIDATION (Clang Recompilation)")
+        lines.append("-" * 40)
+        lines.append(f"  Validation Status: {ai_val.get('status')} — {ai_val.get('status_message')}")
+        lines.append(f"  Original Errors  : {ai_val.get('original_error_count', 0)}")
+        lines.append(f"  Post-Fix Errors  : {ai_val.get('remaining_error_count', 0)}")
+        lines.append(f"  Security Clean   : {'YES' if ai_val.get('security_verified') else 'NO'}")
+        if ai_val.get("diff"):
+            lines.append("\n  Unified Code Diff:")
+            for dline in ai_val["diff"].splitlines()[:25]:
+                lines.append(f"    {dline}")
+
     # ── Energy ────────────────────────────────────────────────────────────────
     energy = result.get("energy", {})
     if energy:
@@ -102,7 +147,7 @@ def to_text(result: dict) -> str:
 
     lines.append("")
     lines.append("=" * 65)
-    lines.append("  CD 2.0 · AI Compiler Diagnostic System")
+    lines.append("  TOACD · AI-Assisted Compiler Diagnosis Engine")
     lines.append("=" * 65)
     return "\n".join(lines)
 
